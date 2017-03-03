@@ -1,8 +1,9 @@
 var express = require('express');
 var app = express();
+var cors = require('cors');
 
 // host
-const hostname = '127.0.0.1';
+const hostname = '94.23.206.157';
 const port = 8090;
 
 // mongo db
@@ -14,6 +15,8 @@ mongoose.connect(mongUrl);
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors());
 
 //
 require('./routes')(app, mongoose);
