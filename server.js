@@ -8,8 +8,18 @@ const port = 8090;
 
 // mongo db
 var mongoose = require('mongoose');
+
 var mongUrl = 'mongodb://stamps:5dsf64g5gg5@127.0.0.1:27017/Stamps';
 mongoose.connect(mongUrl);
+
+var con = mongoose.connection;
+
+con.on( 'connected', function() {
+    console.log( 'Mongoose SUCCESS' );
+} );
+con.on( 'error', function( err ) {
+    console.log( 'Mongoose ERROR' );
+} );
 
 //body parser
 var bodyParser = require('body-parser');

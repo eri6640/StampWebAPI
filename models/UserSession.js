@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 var UserSessionSchema = new Schema({
   token: String,
-  userId: String,
+  username: String,
   created: Number
 });
 

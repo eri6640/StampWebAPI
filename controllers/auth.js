@@ -1,18 +1,12 @@
-var fs = require( 'fs' );
-
-var mongoose = require( 'mongoose' );
-
-var con = mongoose.connection;
-
-con.on( 'connected', function() {
-    console.log( 'Mongoose SUCCESS' );
-} );
-con.on( 'error', function( err ) {
-    console.log( 'Mongoose ERROR' );
-} );
 
 var UserSession = require( '../models/UserSession' );
 var User = require( '../models/User' );
+
+//var Util = require( '../utils/util.js' );
+
+var isEmpty = function isEmpty(value) {
+  return typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null;
+}
 
 exports.getSession = function( req, res ) {
     console.log( "getSession()" );
@@ -28,7 +22,7 @@ exports.getSession = function( req, res ) {
     console.log( "body:" + JSON.stringify( body ) );
     console.log( "token:" + token );
 
-    if ( typeof token === 'undefined' || !token ) {
+    if ( isEmpty(token) ) {
 		res.end( JSON.stringify( responseData ) );
     }
 
@@ -45,10 +39,10 @@ exports.getSession = function( req, res ) {
 			console.log( "Sesija netika atrasta" );
 			// res.end("Sesija netika atrasta: " + JSON.stringify(body));
 
-			var session = new UserSession();
+			/**var session = new UserSession();
 
 			session.token = token;
-			session.userId = 0;
+			session.userId = "";
 			session.created = parseInt( new Date().getTime() / 1000 );
 
 			session.save( function( err ) {
@@ -63,18 +57,18 @@ exports.getSession = function( req, res ) {
 				responseData.message = 'Session created!';
 
 				res.end( JSON.stringify( responseData ) );
-			} );
+			} );**/
 
 		}
 		else {
 			console.log( "Sesija atrasta ===>>> " + JSON.stringify( sessionResp ) );
 			
-			responseData.success = true;
-			responseData.message = 'Sesija atrasta';
+			responseData.success = false;
+			responseData.message = 'Sesija atrasta, bet nederiga!';
 			
-			var userId = parseInt(sessionResp.userId);
+			var userId = sessionResp.userId;
 			
-			if( userId > 0 ){
+			if( !isEmpty(userId) ){
 				console.log( "userId ===>>> " + userId );
 				
 				User.findOne({"userId":userId}, function (err, userResp) {
@@ -87,7 +81,7 @@ exports.getSession = function( req, res ) {
 
 					if(userResp == null || userResp == undefined){
 						
-						responseData.success = true;
+						responseData.success = false;
 						responseData.message = 'Netika atrasts lietotajs';
 						responseData.userData = null;
 						
@@ -98,9 +92,11 @@ exports.getSession = function( req, res ) {
 						responseData.message = 'SUCCESS';
 						
 						responseData.userData = {
-							userId : userResp.userId,
-							username : 'username?',
-							created : 'created?'
+							userId : userResp._id,
+							username : userResp.username,
+							name : userResp.name,
+							surname : userResp.surname,
+							created : userResp.created
 						};
 
 					}
