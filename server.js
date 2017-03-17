@@ -14,17 +14,19 @@ mongoose.connect(mongUrl);
 
 var con = mongoose.connection;
 
-con.on( 'connected', function() {
-    console.log( 'Mongoose SUCCESS' );
-} );
-con.on( 'error', function( err ) {
-    console.log( 'Mongoose ERROR' );
-} );
+con.on('connected', function () {
+	console.log('Mongoose SUCCESS');
+});
+con.on('error', function (err) {
+	console.log('Mongoose ERROR');
+});
 
 //body parser
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+		extended: true
+	}));
 
 app.use(cors());
 
@@ -32,6 +34,6 @@ app.use(cors());
 require('./routes')(app, mongoose);
 
 //
-app.listen(port, hostname, function(err){
-   console.log("Started static resource server at http://%s:%s", hostname, port)
+app.listen(port, hostname, function (err) {
+	console.log("Started static resource server at http://%s:%s", hostname, port)
 });

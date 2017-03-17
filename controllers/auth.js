@@ -8,6 +8,15 @@ var isEmpty = function isEmpty(value) {
   return typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null;
 }
 
+var isEqual = function isEmpty(value, value2) {
+	return new String(value).valueOf() == new String(value2).valueOf();
+}
+
+var isTooShort = function (value, len) {
+	return value.length <= len;
+};
+
+
 exports.getSession = function( req, res ) {
     console.log( "getSession()" );
 
@@ -66,12 +75,12 @@ exports.getSession = function( req, res ) {
 			responseData.success = false;
 			responseData.message = 'Sesija atrasta, bet nederiga!';
 			
-			var userId = sessionResp.userId;
+			var sessionUserName = sessionResp.username;
 			
-			if( !isEmpty(userId) ){
-				console.log( "userId ===>>> " + userId );
+			if( !isEmpty(sessionUserName) ){
+				console.log( "sessionUserName ===>>> " + sessionUserName );
 				
-				User.findOne({"userId":userId}, function (err, userResp) {
+				User.findOne({"username":sessionUserName}, function (err, userResp) {
 					if (err){
 						console.log("findOne() error");
 						userResp = null;
@@ -86,6 +95,25 @@ exports.getSession = function( req, res ) {
 						responseData.userData = null;
 						
 					}
+					else if( ! isEqual(sessionResp.pass, userResp.password) ){
+						
+						
+						responseData.success = false;
+						responseData.message = 'Novecojusi sesija';
+						responseData.userData = null;
+
+						//UserSession.findOne({ "token" : token }).remove( callback );
+						
+						UserSession.remove({ _id: userResp._id }, function(err) {
+							if (!err) {
+								responseData.message = 'sesijas dzeshanas errors';
+							}
+							else {
+								responseData.message = 'vecaa sesija veiksmigi izdzesta';
+							}
+						});
+						
+					}
 					else {
 						
 						responseData.success = true;
@@ -97,6 +125,7 @@ exports.getSession = function( req, res ) {
 							name : userResp.name,
 							surname : userResp.surname,
 							created : userResp.created
+
 						};
 
 					}
@@ -105,6 +134,7 @@ exports.getSession = function( req, res ) {
 				});
 
 			}else{
+				console.log("error");
 				res.end( JSON.stringify( responseData ) );
 			}
 		}
