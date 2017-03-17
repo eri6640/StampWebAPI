@@ -11,7 +11,7 @@ var isEqual = function isEmpty(value, value2) {
 }
 
 exports.login = function (req, res) {
-	console.log("login()");
+	console.log("/api/auth/login()");
 
 	var body = req.body;
 
@@ -23,9 +23,6 @@ exports.login = function (req, res) {
 		success: false,
 		message: 'error?'
 	};
-
-	console.log("body:" + JSON.stringify(body));
-	console.log("username:" + username);
 
 	if (isEmpty(username) || isEmpty(pass) || isEmpty(token)) {
 
@@ -41,7 +38,7 @@ exports.login = function (req, res) {
 			'username': username
 		}, function (err, userResp) {
 			if (err) {
-				console.log("findOne() error");
+				console.log("login.UserfindOne() error");
 				userResp = null;
 				errors = true;
 			}
@@ -60,7 +57,7 @@ exports.login = function (req, res) {
 
 		if (errors === false) {
 			console.log("no errors");
-			
+
 			var session = new UserSession();
 
 			session.token = token;
@@ -69,14 +66,10 @@ exports.login = function (req, res) {
 			session.used = parseInt(new Date().getTime() / 1000);
 
 			session.save(function (err) {
-				
-				console.log("sess save");
 				if (err) {
 					console.log("Create error");
 					res.end(JSON.stringify(responseData));
 				}
-
-				console.log("Sesija izveidota, Success");
 
 				responseData.success = true;
 				responseData.message = 'Pierakstishanas veikta!';
@@ -85,6 +78,23 @@ exports.login = function (req, res) {
 			});
 		} else {
 			console.log("ERRORS");
+		}
+	});
+
+};
+
+exports.logout = function (req, res) {
+	console.log("/api/auth/logout()");
+
+	var body = req.body;
+
+	var token = body.token;
+
+	UserSession.remove({
+		token: token
+	}, function (err) {
+		if (!err) {
+			// do something?!
 		}
 	});
 

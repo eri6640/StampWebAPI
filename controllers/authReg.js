@@ -1,5 +1,5 @@
 
-var User = require( '../models/User' );
+var User = require('../models/User');
 
 //var Util = require( '../utils/util.js' );
 
@@ -14,67 +14,64 @@ var isTooShort = function (value, len) {
 	return value.length <= len;
 };
 
-exports.reg = function( req, res ) {
-    console.log( "reg()" );
+exports.reg = function (req, res) {
+	console.log("/api/auth/reg()");
 
-    var body = req.body;
-	
-    var username = body.username;
-    var name = body.name;
-    var surname = body.surname;
-    var email = body.email;
-    var pass = body.password;
+	var body = req.body;
 
-    var responseData = {
-		success : false,
-		message : 'error?'
-    };
+	var username = body.username;
+	var name = body.name;
+	var surname = body.surname;
+	var email = body.email;
+	var pass = body.password;
 
-    console.log( "body:" + JSON.stringify( body ) );
-    console.log( "username:" + username );
+	var responseData = {
+		success: false,
+		message: 'error?'
+	};
 
-    if ( isEmpty(username) || isEmpty(name) || isEmpty(surname) || isEmpty(email) || isEmpty(pass) ) {
-		
+	if (isEmpty(username) || isEmpty(name) || isEmpty(surname) || isEmpty(email) || isEmpty(pass)) {
+
 		responseData.success = false;
 		responseData.message = 'Nepieciesams aizpildit visus laukus';
-			
-		res.end( JSON.stringify( responseData ) );
-    }
 
-    if ( isTooShort(username, 3) ) {
-		
+		res.end(JSON.stringify(responseData));
+	}
+
+	if (isTooShort(username, 3)) {
+
 		responseData.success = false;
 		responseData.message = 'Segvarda vai paroles lauka garums ir parak iss!';
-			
-		res.end( JSON.stringify( responseData ) );
-    }
-	
-	var checkErrors = false;
-	
-	var checkUsername = User.find({'username': username}, function (err, users) {
-		if (users.length){
-			checkErrors = true;
-		}
-		else{
-			checkErrors = false;
-		}
-		console.log('checkUsername() done');
-	});
-	
-	var checkEmail = User.find({'email': email}, function (err, users) {
-		if (users.length){
-			checkErrors = true;
-		}
-		else{
-			checkErrors = false;
-		}
-		console.log('checkEmail() done');
-	});
-	
-	Promise.all([checkUsername, checkEmail]).then( function () { 
 
-		if(checkErrors === false){
-			console.log( "no errors" );
+		res.end(JSON.stringify(responseData));
+	}
+
+	var checkErrors = false;
+
+	var checkUsername = User.find({
+			'username': username
+		}, function (err, users) {
+			if (users.length) {
+				checkErrors = true;
+			} else {
+				checkErrors = false;
+			}
+		});
+
+	var checkEmail = User.find({
+			'email': email
+		}, function (err, users) {
+			if (users.length) {
+				checkErrors = true;
+			} else {
+				checkErrors = false;
+			}
+		});
+
+	Promise.all([checkUsername, checkEmail]).then(function () {
+
+		if (checkErrors === false) {
+
 			var user = new User();
 
 			user.username = username;
@@ -82,29 +79,22 @@ exports.reg = function( req, res ) {
 			user.surname = surname;
 			user.email = email;
 			user.password = pass;
-			user.created = parseInt( new Date().getTime() / 1000 );
+			user.created = parseInt(new Date().getTime() / 1000);
 
-			user.save( function( err ) {
-				if ( err ) {
-					console.log( "Create error" );
-					res.end( JSON.stringify( responseData ) );
+			user.save(function (err) {
+				if (err) {
+					console.log("Create error");
+					res.end(JSON.stringify(responseData));
 				}
-
-				console.log( "User created!" );
 
 				responseData.success = true;
 				responseData.message = 'User created!';
 
-				res.end( JSON.stringify( responseData ) );
-			} );
-		}
-		else{
-			console.log( "ERRORS" );
+				res.end(JSON.stringify(responseData));
+			});
+		} else {
+			console.log("ERRORS");
 		}
 	});
-	
-	
-		
-	
-	
+
 };

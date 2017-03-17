@@ -15,10 +15,10 @@ mongoose.connect(mongUrl);
 var con = mongoose.connection;
 
 con.on('connected', function () {
-	console.log('Mongoose SUCCESS');
+	console.log('Mongoose 	===>>> SUCCESS');
 });
 con.on('error', function (err) {
-	console.log('Mongoose ERROR');
+	console.log('Mongoose 	===>>> ERROR');
 });
 
 //body parser
@@ -35,5 +35,5 @@ require('./routes')(app, mongoose);
 
 //
 app.listen(port, hostname, function (err) {
-	console.log("Started static resource server at http://%s:%s", hostname, port)
+	console.log("Server ===>>> http://%s:%s", hostname, port)
 });

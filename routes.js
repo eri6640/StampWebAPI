@@ -7,6 +7,7 @@ module.exports = function (app) {
 
 	app.post('/api/auth/getSession', auth.getSession);
 	app.post('/api/auth/login', authLog.login);
+	app.post('/api/auth/logout', authLog.logout);
 	app.post('/api/auth/reg', authReg.reg);
 
 	//app.post('/users', users.login);
