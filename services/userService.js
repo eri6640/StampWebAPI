@@ -35,3 +35,15 @@ exports.findByUsername = function (username) {
 	});
 
 };
+
+exports.findNewestUsers = function (count) {
+
+	return User.find().sort({
+		created: -1
+	}).limit(count, function (err, response) {
+
+		res.end(JSON.stringify(response));
+
+	});
+
+};

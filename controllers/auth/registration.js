@@ -1,21 +1,10 @@
 
-var User = require('../models/User');
+// models
+var User = require(ROOT + '/models/User');
 
-//var Util = require( '../utils/util.js' );
-
-var isEmpty = function isEmpty(value) {
-	return typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null;
-}
-var isEqual = function isEmpty(value, value2) {
-	return new String(value).valueOf() == new String(value2).valueOf();
-}
-
-var isTooShort = function (value, len) {
-	return value.length <= len;
-};
-
-exports.reg = function (req, res) {
-	console.log("/api/auth/reg()");
+// method
+exports.register = function (req, res) {
+	console.log("/api/auth/register()");
 
 	var body = req.body;
 
@@ -30,7 +19,8 @@ exports.reg = function (req, res) {
 		message: 'error?'
 	};
 
-	if (isEmpty(username) || isEmpty(name) || isEmpty(surname) || isEmpty(email) || isEmpty(pass)) {
+	if (StringUtils.isEmpty(username) || StringUtils.isEmpty(name) || StringUtils.isEmpty(surname) ||
+		StringUtils.isEmpty(email) || StringUtils.isEmpty(pass)) {
 
 		responseData.success = false;
 		responseData.message = 'Nepieciesams aizpildit visus laukus';
@@ -38,7 +28,7 @@ exports.reg = function (req, res) {
 		res.end(JSON.stringify(responseData));
 	}
 
-	if (isTooShort(username, 3)) {
+	if (StringUtils.isTooShort(username, 3)) {
 
 		responseData.success = false;
 		responseData.message = 'Segvarda vai paroles lauka garums ir parak iss!';

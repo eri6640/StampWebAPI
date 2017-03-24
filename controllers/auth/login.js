@@ -1,15 +1,9 @@
 
-var UserSession = require('../models/UserSession');
-var User = require('../models/User');
+// models
+var UserSession = require(ROOT + '/models/UserSession');
+var User = require(ROOT + '/models/User');
 
-var isEmpty = function isEmpty(value) {
-	return typeof value == 'string' && !value.trim() || typeof value == 'undefined' || value === null;
-}
-
-var isEqual = function isEmpty(value, value2) {
-	return new String(value).valueOf() == new String(value2).valueOf();
-}
-
+// method
 exports.login = function (req, res) {
 	console.log("/api/auth/login()");
 
@@ -24,7 +18,7 @@ exports.login = function (req, res) {
 		message: 'error?'
 	};
 
-	if (isEmpty(username) || isEmpty(pass) || isEmpty(token)) {
+	if (StringUtils.isEmpty(username) || StringUtils.isEmpty(pass) || StringUtils.isEmpty(token)) {
 
 		responseData.success = false;
 		responseData.message = 'Nepieciesams aizpildit visus laukus';
@@ -45,7 +39,7 @@ exports.login = function (req, res) {
 
 			if (errors === false) {
 
-				if (!isEqual(pass, userResp.password)) {
+				if (!StringUtils.isEqual(pass, userResp.password)) {
 					errors = true;
 				}
 
