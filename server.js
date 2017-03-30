@@ -1,19 +1,16 @@
-
-      /************/
+/************/
 /************************/
-      /************/
+/************/
 /************************/
-      /************/
+/************/
 /************************/
-      /************/
+/************/
 
 var express = require('express');
 var app = express();
 var cors = require('cors');
 
 // cors
-
-
 app.use(cors());
 
 // host
@@ -30,6 +27,23 @@ global.Utils = require('./utils/util.js');
 global.UserUtils = require('./utils/user.js');
 global.StringUtils = require('./utils/string.js');
 
+global.Log = function (string) {
+
+	var d = new Date();
+	var formatNumber = function (number) {
+
+		if (number < 10) {
+			number = '0' + number;
+		}
+
+		return number;
+	};
+
+	var date = formatNumber(d.getHours()) + ":" + formatNumber(d.getMinutes()) + ":" + formatNumber(d.getSeconds());
+
+	console.log(date + " - " + string);
+};
+
 // mongo db
 var mongoose = require('mongoose');
 var mongUrl = 'mongodb://stamps:5dsf64g5gg5@127.0.0.1:27017/Stamps';
@@ -39,10 +53,10 @@ mongoose.connect(mongUrl);
 var con = mongoose.connection;
 
 con.on('connected', function () {
-	console.log('Mongoose ===>>> SUCCESS');
+	Log('Mongoose SUCCESS');
 });
 con.on('error', function (err) {
-	console.log('Mongoose ===>>> ERROR');
+	Log('Mongoose ERROR');
 });
 
 //body parser
@@ -54,12 +68,30 @@ app.use(bodyParser.urlencoded({
 
 // cookie parser
 var cookieParser = require('cookie-parser')
-app.use(cookieParser());
+	app.use(cookieParser());
+
+var SessionService = require(ROOT + '/services/AuthSessionService');
+
+app.use(function (request, res, next) {
+
+	var session = SessionService.getSession(request);
+
+	session.then(function (responseData) {
+		Log("Promise");
+
+		request.responseData = responseData;
+
+		Log("session response: ", JSON.stringify(responseData));
+
+		next();
+
+	});
+});
 
 // routes
 require('./routes')(app, mongoose);
 
 // server listen
 app.listen(port, hostname, function (err) {
-	console.log("Server ===>>> http://%s:%s", hostname, port)
+	Log("Server address: http://" + hostname + ":" + port);
 });

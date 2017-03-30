@@ -4,10 +4,17 @@ var UserSession = require(ROOT + '/models/UserSession');
 var User = require(ROOT + '/models/User');
 
 // services
-var UserService = require(ROOT + '/services/userService');
+var UserService = require(ROOT + '/services/UserService');
+var SessionService = require(ROOT + '/services/AuthSessionService');
 
 // method
+
 exports.getSession = function (request, res) {
+	res.end(JSON.stringify(request.responseData));
+};
+
+
+/*exports.getSession = function (request, res) {
 	console.log("/api/auth/getSession()");
 
 	var body = request.body;
@@ -62,6 +69,8 @@ exports.getSession = function (request, res) {
 
 			res.end(JSON.stringify(responseData));
 		} else {
+			
+			console.log("===>>> request.test ", request.test)
 
 			var user = null;
 
@@ -116,4 +125,4 @@ exports.getSession = function (request, res) {
 
 	});
 
-};
+};*/

@@ -1,5 +1,5 @@
 
 
 exports.isNull = function(value){
-	return user == null || value === null || user == undefined || typeof value == 'undefined';
+	return value == null || value === null || value == undefined || typeof value == 'undefined';
 };

@@ -4,13 +4,13 @@ var UserSession = require(ROOT + '/models/UserSession');
 var User = require(ROOT + '/models/User');
 
 // method
-exports.login = function (req, res) {
-	console.log("/api/auth/login()");
+exports.login = function (request, res) {
+	Log("/api/auth/login()");
 
-	var body = req.body;
+	var body = request.body;
 
 	var username = body.username;
-	var token = body.token;
+	var token = request.headers.token;
 	var pass = body.password;
 
 	var responseData = {
@@ -32,7 +32,7 @@ exports.login = function (req, res) {
 			'username': username
 		}, function (err, userResp) {
 			if (err) {
-				console.log("login.UserfindOne() error");
+				Log("login.UserfindOne() error");
 				userResp = null;
 				errors = true;
 			}
@@ -50,7 +50,7 @@ exports.login = function (req, res) {
 	Promise.all([checkUserData]).then(function () {
 
 		if (errors === false) {
-			console.log("no errors");
+			Log("no errors");
 
 			var session = new UserSession();
 
@@ -61,7 +61,7 @@ exports.login = function (req, res) {
 
 			session.save(function (err) {
 				if (err) {
-					console.log("Create error");
+					Log("Create error");
 					res.end(JSON.stringify(responseData));
 				}
 
@@ -71,14 +71,14 @@ exports.login = function (req, res) {
 				res.end(JSON.stringify(responseData));
 			});
 		} else {
-			console.log("ERRORS");
+			Log("ERRORS");
 		}
 	});
 
 };
 
 exports.logout = function (req, res) {
-	console.log("/api/auth/logout()");
+	Log("/api/auth/logout()");
 
 	var body = req.body;
 

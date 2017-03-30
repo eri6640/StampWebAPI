@@ -4,7 +4,7 @@ var User = require(ROOT + '/models/User');
 
 // method
 exports.register = function (req, res) {
-	console.log("/api/auth/register()");
+	Log("/api/auth/register()");
 
 	var body = req.body;
 
@@ -73,7 +73,7 @@ exports.register = function (req, res) {
 
 			user.save(function (err) {
 				if (err) {
-					console.log("Create error");
+					Log("Create error");
 					res.end(JSON.stringify(responseData));
 				}
 
@@ -83,7 +83,7 @@ exports.register = function (req, res) {
 				res.end(JSON.stringify(responseData));
 			});
 		} else {
-			console.log("ERRORS");
+			Log("ERRORS");
 		}
 	});
 
