@@ -1,13 +1,6 @@
 var fs = require('fs');
 
-
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-
-var UserSchema = new Schema({
-  username: String,
-  password: String
-});
 
 var con = mongoose.connection;
 
@@ -18,7 +11,7 @@ con.on('error',function (err) {
   console.log('Mongoose ERROR');
 });
 
-var User = mongoose.model('User', UserSchema);
+var UserSession = require('../amodels/UserSession');
 
 
 exports.findall = function(req, res) {
